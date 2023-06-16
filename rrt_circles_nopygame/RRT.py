@@ -15,7 +15,10 @@ def main():
 
     while (not graph.path_to_goal()):
         rint = random.randint(0, 100)
-        if rint < 80:
+
+        if graph.directPath(goal):
+            continue
+        if rint < 50:
             X, Y, Parent = graph.bias(goal)
             pass
         else:
@@ -36,12 +39,7 @@ def main():
         plt.gcf().gca().add_artist(circle)
     plt.show()
 
-    return True
-
-
-        
-        # if elapsed > 1:
-        #     return True
+    return True, path
 
 result = False
 t1 = time.time()
@@ -49,8 +47,8 @@ while not result:
     elapsed = time.time() - t1
     if elapsed > 1:
         break
-    try:
-        main()
-        result = True
-    except:
-        pass
+    # try:
+    result,path = main()
+    # except Exception as e:
+    #     print(e)
+    #     pass

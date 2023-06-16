@@ -1,6 +1,5 @@
 import random
 import math
-import pygame
 
 class RRTGraph:
     def __init__(self, start, goal,
@@ -174,10 +173,12 @@ class RRTGraph:
             self.add_edge(n1, n2)
             return True
 
-    def step(self, nnear, nrand, dmax = 35):
+    def step(self, nnear, nrand, dmax = 38, bias = False):
         """
         Crea un nodo entre el nodo actual y el más cercano
         con un stepsize
+
+        En caso de bias = True, y el camino esta despejado, une ambos nodos directamente
         """
         d = self.distance(nnear, nrand)
         if d > dmax:
@@ -197,6 +198,8 @@ class RRTGraph:
             else:
                 self.add_node(nrand, x, y)
 
+
+
     def path_to_goal(self):
         if self.goalFlag:
             self.path = []
@@ -215,7 +218,17 @@ class RRTGraph:
             x, y = (self.x[node], self.y[node])
             pathCoords.append((x,y))
         return pathCoords
-
+    
+    def directPath(self, ngoal):
+        n = self.number_of_nodes()
+        self.add_node(n, ngoal[0], ngoal[1])
+        nnear = self.nearest(n)
+        if self.connect(nnear, n):
+            self.goalstate = n
+            self.goalFlag = True
+            return True
+        return False
+    
     def bias(self, ngoal):
         """
         Bias para que vaya en dirección al goal
